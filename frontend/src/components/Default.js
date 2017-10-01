@@ -1,8 +1,17 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import { connect } from 'react-redux';
-import { categoriesFetch, postsFetch, sortUpdate, updatePosts } from '../actions';
+import {
+    categoriesFetch,
+    postsFetch,
+    sortUpdate,
+    updatePosts,
+    updatePost,
+    postFormUpdate,
+    postFormStateUpdate
+} from '../actions';
 import CategoryList from './CategoryList';
 import PostList from './PostList';
 
@@ -73,13 +82,55 @@ class Default extends React.Component {
         let list = this.props.posts.sort(this.sortOptions[value]);
         return this.props.updatePosts(list);
     }
+    updatePost = post => {
+        const _that = this;
+        _that
+            .props
+            .updatePost(post)
+            .then(() => _that.redirect())
+            .catch(error => {
+                toastr.error(error);
+                console.log('updatePost error', error);
+                _that.resetFormState();
+            });
+    }
+    redirect = () => {
+        this.props.postFormUpdate({key: 'saving', value: false});
+        toastr.success('Post saved');
+        this
+            .props
+            .history
+            .push('/');
+    }
+    resetFormState = () => {
+        this.props.postFormState.title = '';
+        this.props.postFormState.body = '';
+        this.props.postFormState.author = '';
+        this.props.postFormState.category = '';
+        this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
+        this.props.postFormUpdate({key: 'saving', value: false});
+        this.props.postFormUpdate({key: 'error', value: {}});
+    }
+
+    onPostVoteScoreSelected = post => {
+        this.props.postFormStateUpdate({key: 'postFormState', value: post});
+    }
+
+    updatePostState = event => {
+        console.log('event.target.name', event.target.name);
+        console.log('event.target.value', event.target.value);
+        const field = event.target.name;
+        this.props.postFormState[field] = event.target.value;
+        console.log('this.props.postFormState', this.props.postFormState);
+        this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
+    }
 
     onUpdate = list => {
         this.props.updatePosts(list);
     }
 
     render() {
-        const { categories, posts } = this.props;
+        const { categories, posts, postFormState } = this.props;
         return (
             <div className="list-books">
                 <div className="DefaultTitle">
@@ -91,7 +142,15 @@ class Default extends React.Component {
                 <div >
                     <div className="DefaultContent">
                         <CategoryList list={categories} />
-                        <PostList list={posts} onSort={this.updateSort} onUpdate={this.onUpdate} sortBy={this.props.sortBy}/>
+                        <PostList
+                            list={posts}
+                            postFormState={postFormState}
+                            onSort={this.updateSort}
+                            onUpdate={this.onUpdate}
+                            onChange={this.updatePostState}
+                            updatePost={this.updatePost}
+                            onPostVoteScoreSelected={this.onPostVoteScoreSelected}
+                            sortBy={this.props.sortBy}/>
                     </div>
                 </div>
             </div>
@@ -106,7 +165,8 @@ const mapStateToProps = state => {
     return {
         sortBy: posts.sortBy,
         categories,
-        posts: posts.posts.filter(post => !post.deleted)
+        posts: posts.posts.filter(post => !post.deleted),
+        postFormState: posts.postFormState
     };
 };
 
@@ -114,5 +174,8 @@ export default connect(mapStateToProps, {
     categoriesFetch,
     postsFetch,
     sortUpdate,
-    updatePosts
+    updatePosts,
+    updatePost,
+    postFormUpdate,
+    postFormStateUpdate
 })(Default);

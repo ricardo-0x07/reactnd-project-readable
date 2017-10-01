@@ -9,9 +9,11 @@ export default function CommentList({
     selectedId,
     updateComment,
     onChange,
+    onVoteChange,
     commentFormState,
     onCommentUnSelected,
-    onDelete
+    onDelete,
+    onCommentVoteScoreSelected
 }) {
     console.log('list', list);
     return (
@@ -20,7 +22,7 @@ export default function CommentList({
                 Comments
             </h3>
             <ul>
-                {list.map(item => (
+                {list.sort((a, b) => b.voteScore - a.voteScore).map(item => (
                     <li key={item.id} className="PostListItem">
                         {selectedId != item.id && <pre onClick={() => onCommentSelected(item)}>{item.body}</pre>}
                         {selectedId == item.id && <textarea
@@ -34,7 +36,19 @@ export default function CommentList({
                             onChange={onChange}
                         ></textarea>}
                         <p>Author: {item.author}</p>
-                        <div>Vote Score: {item.voteScore}</div>
+                        <div>Vote Score:
+                            <input
+                                className="form-control"
+                                name="voteScore"
+                                id="number"
+                                type="number"
+                                onFocus={() => onCommentVoteScoreSelected(item)}
+                                onChange={onChange}
+                                onBlur={() => {
+                                    updateComment(commentFormState);
+                                }}
+                                value={commentFormState.id == item.id ? commentFormState.voteScore : item.voteScore} />
+                        </div>
                         <div>
                             Date: <Moment format="YYYY-MMM-DD">{item.timestamp}</Moment>
                         </div>

@@ -23,6 +23,12 @@ import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 
 class PostDetails extends React.Component {
+    // constructor(props, context) {
+    //     super(props, context);
+    //     this
+    //         .props
+    //         .commentsFetch(this.props.post.id);
+    // }
     static propTypes = {
         // post: PropTypes.object.isRequired,
         posts: PropTypes.array.isRequired,
@@ -31,12 +37,6 @@ class PostDetails extends React.Component {
 
     componentDidMount() {
         console.log('PostDetails componentDidMount');
-        this
-            .props
-            .categoriesFetch();
-        this
-            .props
-            .postsFetch();
         this
             .props
             .commentsFetch(this.props.post.id);
@@ -53,16 +53,12 @@ class PostDetails extends React.Component {
 
     onCommentDelete = id => {
         const _that = this;
-        this.props.commentDelete(id)
-            .then(() => _that.redirect())
-            .catch(error => {
-                _that.redirect();
-                console.log('onDelete error', error);
-            });
+        this.props.commentDelete(id);
     }
 
     updateComment = comment => {
-        this.props.updateComment(comment);
+        this.props.updateComment(comment)
+            .then(() => this.props.commentsFetch(this.props.post.id));
     }
 
     redirect = () => {
@@ -80,13 +76,29 @@ class PostDetails extends React.Component {
         this.props.commentFormStateUpdate({key: 'commentFormState', value: this.props.commentFormState});
     }
 
+    onVoteChange = event => {
+        console.log('event.target.name', event.target.name);
+        console.log('event.target.value', event.target.value);
+        const field = event.target.name;
+        this.props.commentFormState[field] = event.target.value;
+        console.log('this.props.commentFormState', this.props.commentFormState);
+        this.props.commentFormStateUpdate({key: 'commentFormState', value: this.props.commentFormState});
+        // this.updateComment(this.props.commentFormState);
+    }
+
     onCommentSelected = comment => {
         this.props.commentFormStateUpdate({key: 'commentFormState', value: comment});
         this.props.onCommentSelected(comment.id);
     }
 
+    onCommentVoteScoreSelected = comment => {
+        this.props.commentFormStateUpdate({key: 'commentFormState', value: comment});
+        // this.props.onCommentSelected(comment.id);
+    }
+
     onCommentUnSelected = () => {
         this.props.onCommentSelected('');
+        this.resetFormState();
     }
     save = event => {
         event.preventDefault();
@@ -126,6 +138,10 @@ class PostDetails extends React.Component {
     }
 
     resetFormState = () => {
+        this.props.commentFormState.id = '';
+        this.props.commentFormState.parentId = '';
+        this.props.commentFormState.voteScore = 1;
+        this.props.commentFormState.timestamp = null;
         this.props.commentFormState.body = '';
         this.props.commentFormState.author = '';
         this.props.commentFormStateUpdate({key: 'commentFormState', value: this.props.commentFormState});
@@ -158,6 +174,7 @@ class PostDetails extends React.Component {
                     updateComment={this.updateComment}
                     onChange={this.updateCommentState}
                     onDelete={this.onCommentDelete}
+                    onCommentVoteScoreSelected={this.onCommentVoteScoreSelected}
                 />
                 {!this.props.newComment && <button onClick={() => {
                     this.props.commentFormUpdate({key: 'newComment', value: true});

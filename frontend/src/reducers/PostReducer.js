@@ -35,19 +35,19 @@ export default(state = INITIAL_STATE, action) => {
         case POSTS_FETCH_SUCCESS:
             return {...state, [posts]: action.payload};
         case POST_CREATION_SUCCESS:
-            return {...state, [posts]: [...[posts], Object.assign({}, action.payload)], [postFormStateName]: Object.assign({}, postFormState), errors, saving};
+            return {...state, [posts]: [...state[posts], Object.assign({}, action.payload)], [postFormStateName]: Object.assign({}, postFormState), errors, saving};
         case POST_UPDATE_SUCCESS:
-            return {...state, [posts]: [...[posts].filter(post => post.id !== action.payload.id), Object.assign({}, action.payload)]};
+            return {...state, [posts]: [...state[posts].filter(post => post.id !== action.payload.id), Object.assign({}, action.payload)]};
         case POST_FORM_STATE_UPDATE_SUCCESS:
             return {...state, [action.payload.key]: Object.assign({}, action.payload.value)};
         case POST_FORM_UPDATE_SUCCESS:
             return {...state, [action.payload.key]: action.payload.value};
         case POST_DELETE_SUCCESS:
-            return {...state, [posts]: [...[posts].filter(post => post.id !== action.payload.id)]};
+            return {...state, [posts]: [...state[posts].filter(post => post.id !== action.payload.id)]};
         case SORT_UPDATE:
-            return {...state, [sortBy]: Object.assign({}, action.payload)};
+            return {...state, [sortBy]: action.payload};
         case UPDATE_POSTS_SUCCESS:
-            return {...state, [posts]: Object.assign({}, action.payload)};
+            return {...state, [posts]: action.payload};
         default:
             return state;
     }
