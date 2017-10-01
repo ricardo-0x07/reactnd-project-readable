@@ -63,6 +63,7 @@ function getAll (token) {
 }
 
 function add (token, post) {
+  console.log('server post', post);
   return new Promise((res) => {
     let posts = getData(token)
 

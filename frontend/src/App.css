@@ -1,0 +1,65 @@
+.App {
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.CategoryListItem {
+  text-transform: capitalize;
+}
+
+.PostListItem {
+  text-transform: capitalize;  
+}
+
+.DefaultContent {
+  display: flex;
+}
+.CategoryList {
+  text-transform: capitalize;
+  flex: 1;
+}
+
+.PostList {
+  text-transform: capitalize;  
+  flex: 1;
+}
+.Post {
+  margin: auto;
+  width: 80%;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.create-post-form {
+  margin: auto;
+  width: 80%;
+}
+
+.create-title {
+  text-align: center;
+}
+
+.SelectOptions {
+  text-transform: capitalize;
+}
