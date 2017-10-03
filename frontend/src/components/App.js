@@ -29,7 +29,6 @@ class App extends React.Component {
                 <div className="App">
                     <Header />
                     <Route exact path="/" component={Default} className="Default"/>
-                    <Route exact path="/posts" component={Posts}/>
                     <Route path="/postdetails/:id" component={PostDetails}/>
                     <Route path="/category/:id" component={Category}/>
                     <Route exact path="/create" component={ManagePostForm}/>

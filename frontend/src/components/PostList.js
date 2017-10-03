@@ -1,7 +1,8 @@
 import React from 'react'
 import Moment from 'react-moment';
 import {Link} from 'react-router-dom';
-
+import {ButtonGroup, Button, ListGroup, ListGroupItem, Panel} from 'react-bootstrap';
+import PostItem from './PostItem';
 
 export default function PostList({
     list,
@@ -18,37 +19,21 @@ export default function PostList({
     // console.log('sortedList', sortedList);
     // onUpdate(sortedList);
     return (
-        <div className='PostList'>
-            <h3 className='subheader'>
-                Posts
-            </h3>
-            <ul>
+        <Panel header="Posts"  className='PostList'>
+            <ButtonGroup >
+                <Button onClick={() => onSort('voteScore')}>Sort By Score</Button>
+                <Button onClick={() => onSort('timeStamp')}>Sort by Date</Button>
+            </ButtonGroup>
+            <ListGroup>
                 {list.map(item => (
-                    <li key={item.id} className="PostListItem">
-                        <h4>Title: {item.title}</h4>
-                        <p>Author: {item.author}</p>
-                        <div onClick={() => onSort('voteScore')}>Vote Score: {item.voteScore}</div>
-                        <div>Vote Score:
-                            <input
-                                className="form-control"
-                                name="voteScore"
-                                id="number"
-                                type="number"
-                                onFocus={() => onPostVoteScoreSelected(item)}
-                                onChange={onChange}
-                                onBlur={() => {
-                                    updatePost(postFormState);
-                                }}
-                                value={postFormState.id && postFormState.id == item.id ? postFormState.voteScore : item.voteScore} />
-                        </div>
-
-                        <div onClick={() => onSort('timeStamp')}>
-                            Date: <Moment format="YYYY-MMM-DD">{item.timestamp}</Moment>
-                        </div>
-                        <Link to={`/postdetails/${item.id}`}>View Details</Link>
-                    </li>
+                    <PostItem
+                        post={item}
+                        onPostVoteScoreSelected={onPostVoteScoreSelected}
+                        onChange={onChange}
+                        postFormState={postFormState}
+                    />
                 ))}
-            </ul>
-        </div>
+            </ListGroup>
+        </Panel>
     );
 }

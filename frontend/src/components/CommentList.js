@@ -1,7 +1,7 @@
 import React from 'react'
 import Moment from 'react-moment';
 import {Link} from 'react-router-dom';
-
+import {Grid, Row, Col, Panel, ListGroup, ListGroupItem, ButtonToolbar, Button} from 'react-bootstrap';
 
 export default function CommentList({
     list,
@@ -17,13 +17,13 @@ export default function CommentList({
 }) {
     console.log('list', list);
     return (
-        <div className='Post'>
-            <h3 className='subheader'>
+        <Panel >
+            <h4 className="title">
                 Comments
-            </h3>
-            <ul>
+            </h4>
+            <ListGroup>
                 {list.sort((a, b) => b.voteScore - a.voteScore).map(item => (
-                    <li key={item.id} className="PostListItem">
+                    <ListGroupItem key={item.id} className="PostListItem">
                         {selectedId != item.id && <pre onClick={() => onCommentSelected(item)}>{item.body}</pre>}
                         {selectedId == item.id && <textarea
                             onBlur={() => {
@@ -35,7 +35,7 @@ export default function CommentList({
                             value={commentFormState.body}
                             onChange={onChange}
                         ></textarea>}
-                        <p>Author: {item.author}</p>
+                        <p className="Author">Author: {item.author}</p>
                         <div>Vote Score:
                             <input
                                 className="form-control"
@@ -52,11 +52,13 @@ export default function CommentList({
                         <div>
                             Date: <Moment format="YYYY-MMM-DD">{item.timestamp}</Moment>
                         </div>
-                        <button onClick={() => onCommentSelected(item)}>Edit</button>
-                        <button onClick={() => onDelete(item.id)}>Delete</button>
-                    </li>
+                        <ButtonToolbar>
+                            <Button onClick={() => onCommentSelected(item)}>Edit</Button>
+                            <Button onClick={() => onDelete(item.id)}>Delete</Button>
+                        </ButtonToolbar>
+                    </ListGroupItem>
                 ))}
-            </ul>
-        </div>
+            </ListGroup>
+        </Panel>
     );
 }

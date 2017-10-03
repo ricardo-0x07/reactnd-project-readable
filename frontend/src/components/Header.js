@@ -14,11 +14,10 @@ export default function Header() {
         <nav className="navbar navbar-default">
             <div className="container-fluid">
                 <NavLink exact to="/" className="navbar-brand">
-                    <img src="../logo.svg" />
+                    <img src="./logo.svg" />
                 </NavLink>
                 <ul className="nav navbar-nav">
-                    <li><NavLink exact to="/">Default</NavLink></li>
-                    <li><NavLink to="/posts">Posts</NavLink></li>
+                    <li><NavLink exact to="/">Home</NavLink></li>
                     <li><NavLink to="/create">New Post</NavLink></li>
                 </ul>
             </div>

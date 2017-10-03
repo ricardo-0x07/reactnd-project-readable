@@ -35,7 +35,7 @@ class Posts extends React.Component {
                     <h1>Posts</h1>
                 </div>
                 <div className="AddPost">
-                    <Link to="/search">New Post</Link>
+                    <Link to="/create">New Post</Link>
                 </div>
                 <div >
                     <div className="DefaultContent">

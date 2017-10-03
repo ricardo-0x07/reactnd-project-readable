@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { connect } from 'react-redux';
+import {Grid, Row, Col, Panel} from 'react-bootstrap';
 import {
     categoriesFetch,
     postsFetch,
@@ -80,15 +81,15 @@ class Category extends React.Component {
         console.log('Category this.props', this.props);
         const { categories, posts, postFormState } = this.props;
         return (
-            <div className="list-books">
-                <div className="DefaultTitle">
+            <Grid className="list-books">
+                <Row className="DefaultTitle">
                     <h1>Category</h1>
-                </div>
-                <div className="AddPost">
+                </Row>
+                <Row className="AddPost">
                     <Link to="/search">New Post</Link>
-                </div>
-                <div >
-                    <div className="DefaultContent">
+                </Row>
+                <Row >
+                    <Col className="DefaultContent">
                         <CategoryList list={categories} />
                         <PostList
                             list={posts}
@@ -99,9 +100,9 @@ class Category extends React.Component {
                             updatePost={this.updatePost}
                             onPostVoteScoreSelected={this.onPostVoteScoreSelected}
                         />
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Grid>
         );
     }
 }

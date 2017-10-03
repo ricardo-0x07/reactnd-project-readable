@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import Modal from 'react-modal';
 import uuidv1 from 'uuid/v1';
 import toastr from 'toastr';
+import {Grid, Row, Col, Panel, ListGroup, ListGroupItem, ButtonToolbar, Button} from 'react-bootstrap';
 import { 
     postsFetch,
     categoriesFetch,
@@ -16,25 +17,20 @@ import {
     updateComment,
     createComment,
     commentFormUpdate,
-    commentFormStateUpdate
+    commentFormStateUpdate,
+    updatePost,
+    postFormStateUpdate
 } from '../actions';
 import Post from './Post';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
 
 class PostDetails extends React.Component {
-    // constructor(props, context) {
-    //     super(props, context);
-    //     this
-    //         .props
-    //         .commentsFetch(this.props.post.id);
-    // }
     static propTypes = {
         // post: PropTypes.object.isRequired,
         posts: PropTypes.array.isRequired,
         postsFetch: PropTypes.func.isRequired
     }
-
     componentDidMount() {
         console.log('PostDetails componentDidMount');
         this
@@ -50,17 +46,14 @@ class PostDetails extends React.Component {
                 console.log('onDelete error', error);
             });
     }
-
     onCommentDelete = id => {
         const _that = this;
         this.props.commentDelete(id);
     }
-
     updateComment = comment => {
         this.props.updateComment(comment)
             .then(() => this.props.commentsFetch(this.props.post.id));
     }
-
     redirect = () => {
         this
             .props
@@ -68,34 +61,22 @@ class PostDetails extends React.Component {
             .push('/');
     }
     updateCommentState = event => {
-        console.log('event.target.name', event.target.name);
-        console.log('event.target.value', event.target.value);
         const field = event.target.name;
         this.props.commentFormState[field] = event.target.value;
-        console.log('this.props.commentFormState', this.props.commentFormState);
         this.props.commentFormStateUpdate({key: 'commentFormState', value: this.props.commentFormState});
     }
-
     onVoteChange = event => {
-        console.log('event.target.name', event.target.name);
-        console.log('event.target.value', event.target.value);
         const field = event.target.name;
         this.props.commentFormState[field] = event.target.value;
-        console.log('this.props.commentFormState', this.props.commentFormState);
         this.props.commentFormStateUpdate({key: 'commentFormState', value: this.props.commentFormState});
-        // this.updateComment(this.props.commentFormState);
     }
-
     onCommentSelected = comment => {
         this.props.commentFormStateUpdate({key: 'commentFormState', value: comment});
         this.props.onCommentSelected(comment.id);
     }
-
     onCommentVoteScoreSelected = comment => {
         this.props.commentFormStateUpdate({key: 'commentFormState', value: comment});
-        // this.props.onCommentSelected(comment.id);
     }
-
     onCommentUnSelected = () => {
         this.props.onCommentSelected('');
         this.resetFormState();
@@ -107,7 +88,6 @@ class PostDetails extends React.Component {
             return;
         }
 
-        console.log('createComment this.props.CommentFormState', this.props.commentFormState);
         this.props.commentFormState.timestamp = Date.now();
         this.props.commentFormState.id = uuidv1();
         this.props.commentFormState.parentId = this.props.post.id;
@@ -116,16 +96,14 @@ class PostDetails extends React.Component {
             .props
             .createComment(this.props.commentFormState)
             .then(() => {
-                this.redirect();
+                // this.redirect();
                 this.resetFormState();
             })
             .catch(error => {
                 toastr.error(error);
-                console.log('createcomment error', error);
                 this.resetFormState();
             });
     }
-
     formIsValid() {
         let formIsValid = true;
 
@@ -136,7 +114,6 @@ class PostDetails extends React.Component {
         }
         return formIsValid;
     }
-
     resetFormState = () => {
         this.props.commentFormState.id = '';
         this.props.commentFormState.parentId = '';
@@ -149,6 +126,27 @@ class PostDetails extends React.Component {
         this.props.commentFormUpdate({key: 'error', value: {}});
         this.props.commentFormUpdate({key: 'newComment', value: false});
     }
+    onPostVoteScoreSelected = post => {
+        this.props.postFormStateUpdate({key: 'postFormState', value: post});
+    }
+
+    updatePostState = event => {
+        const field = event.target.name;
+        this.props.postFormState[field] = event.target.value;
+        this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
+    }
+    updatePost = post => {
+        const _that = this;
+        _that
+            .props
+            .updatePost(post)
+            // .then(() => _that.redirect())
+            .catch(error => {
+                toastr.error(error);
+                console.log('updatePost error', error);
+                _that.resetFormState();
+            });
+    }
 
     render() {
         console.log('Comment this.props', this.props);
@@ -158,11 +156,19 @@ class PostDetails extends React.Component {
             selectedId,
             commentFormState,
             errors,
-            saving
+            saving,
+            postFormState
         } = this.props;
         return (
-            <div>
-                <Post post={post} onDelete={this.onDelete}/>
+            <Grid>
+                <Post
+                    post={post}
+                    onDelete={this.onDelete}
+                    postFormState={postFormState}
+                    onChange={this.updatePostState}
+                    updatePost={this.updatePost}
+                    onPostVoteScoreSelected={this.onPostVoteScoreSelected}
+                />
                 <CommentList
                     commentFormState={commentFormState}
                     errors={errors}
@@ -176,17 +182,19 @@ class PostDetails extends React.Component {
                     onDelete={this.onCommentDelete}
                     onCommentVoteScoreSelected={this.onCommentVoteScoreSelected}
                 />
-                {!this.props.newComment && <button onClick={() => {
-                    this.props.commentFormUpdate({key: 'newComment', value: true});
-                }}>New Comment</button>}
-                {this.props.newComment && <CommentForm
-                    comment={commentFormState}
-                    errors={errors}
-                    saving={saving}
-                    onSave={this.save}
-                    onChange={this.updateCommentState}
-                />}
-            </div>
+                <Panel>
+                    {(!this.props.newComment || selectedId) && <Button onClick={() => {
+                        this.props.commentFormUpdate({key: 'newComment', value: true});
+                    }}>New Comment</Button>}
+                    {this.props.newComment && !selectedId && <CommentForm
+                        comment={commentFormState}
+                        errors={errors}
+                        saving={saving}
+                        onSave={this.save}
+                        onChange={this.updateCommentState}
+                    />}
+                </Panel>
+            </Grid>
         );
     }
 }
@@ -206,7 +214,8 @@ const mapStateToProps = (state, ownProps) => {
         posts: posts.posts,
         post: posts
             .posts
-            .filter(post => post.id == ownProps.match.params.id)[0]
+            .filter(post => post.id == ownProps.match.params.id)[0],
+        postFormState: posts.postFormState
     };
 };
 
@@ -220,5 +229,7 @@ export default connect(mapStateToProps, {
     updateComment,
     createComment,
     commentFormUpdate,
-    commentFormStateUpdate
+    commentFormStateUpdate,
+    updatePost,
+    postFormStateUpdate
 })(PostDetails);
