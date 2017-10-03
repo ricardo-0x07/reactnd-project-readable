@@ -18,8 +18,6 @@ const errors = {};
 const saving = false;
 const newComment = false;
 const comments = 'comments';
-const commentFormStateName = 'commentFormState';
-// const selectedId = 'selectedId';
 const INITIAL_STATE = {
     newComment,
     comments: [],
@@ -30,7 +28,6 @@ const INITIAL_STATE = {
 };
 
 export default(state = INITIAL_STATE, action) => {
-    console.log('COMMENTS_FETCH action', action);
     switch (action.type) {
         case COMMENTS_FETCH_SUCCESS:
             return {...state, comments: action.payload};

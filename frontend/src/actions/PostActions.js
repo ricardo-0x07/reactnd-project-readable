@@ -13,7 +13,6 @@ import {
 import * as API from '../utils/api';
 
 export const postsFetch = () => {
-    console.log('postsFetch');
     return dispatch => {
         API
             .getPosts()
@@ -24,7 +23,6 @@ export const postsFetch = () => {
 };
 
 export const postFetch = id => {
-    console.log('postFetch');
     return dispatch => {
         API
             .getPost(id)
@@ -36,7 +34,6 @@ export const postFetch = id => {
 
 
 export const postDelete = id => {
-    console.log('postDelete');
     return dispatch => {
         return API
             .deletePost(id)
@@ -75,7 +72,6 @@ export const postFormUpdate = update => {
 };
 
 export const updatePost = post => {
-    console.log('updatePost post', post);
     return dispatch => {
         return API
             .updatePost(post)
@@ -86,7 +82,6 @@ export const updatePost = post => {
 };
 
 export const createPost = post => {
-    console.log('createPost post', post);
     return dispatch => {
         return API
             .createPost(post)

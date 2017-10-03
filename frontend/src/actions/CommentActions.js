@@ -38,7 +38,6 @@ export const onCommentSelected = value => {
 };
 
 export const createComment = comment => {
-    console.log('createPost comment', comment);
     return dispatch => {
         return API
             .addComment(comment)
@@ -63,7 +62,6 @@ export const commentFormUpdate = update => {
 };
 
 export const updateComment = comment => {
-    console.log('updatePost comment', comment);
     return dispatch => {
         return API
             .updateComment(comment)
@@ -74,7 +72,6 @@ export const updateComment = comment => {
 };
 
 export const commentDelete = id => {
-    console.log('commentDelete');
     return dispatch => {
         return API
             .deleteComment(id)

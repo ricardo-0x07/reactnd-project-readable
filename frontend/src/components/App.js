@@ -7,7 +7,6 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import ManagePostForm from './ManagePostForm';
 import PostDetails from './PostDetails';
-import Posts from './Posts';
 import Category from './Category';
 import Default from './Default';
 import '../App.css';

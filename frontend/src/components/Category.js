@@ -1,9 +1,9 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { connect } from 'react-redux';
-import {Grid, Row, Col, Panel} from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 import {
     categoriesFetch,
     postsFetch,
@@ -69,24 +69,17 @@ class Category extends React.Component {
     }
 
     updatePostState = event => {
-        console.log('event.target.name', event.target.name);
-        console.log('event.target.value', event.target.value);
         const field = event.target.name;
         this.props.postFormState[field] = event.target.value;
-        console.log('this.props.postFormState', this.props.postFormState);
         this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
     }
 
     render() {
-        console.log('Category this.props', this.props);
         const { categories, posts, postFormState } = this.props;
         return (
             <Grid className="list-books">
-                <Row className="DefaultTitle">
-                    <h1>Category</h1>
-                </Row>
                 <Row className="AddPost">
-                    <Link to="/search">New Post</Link>
+                    <Link to="/create">New Post</Link>
                 </Row>
                 <Row >
                     <Col className="DefaultContent">
@@ -109,12 +102,11 @@ class Category extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
     const { categories, posts } = state;
-    console.log('default state', state);
 
     return {
         sortBy: posts.sortBy,
-        categories: categories.filter(category => category.name == ownProps.match.params.id),
-        posts: posts.posts.filter(post => post.category == ownProps.match.params.id && !post.deleted),
+        categories: categories.filter(category => category.name === ownProps.match.params.id),
+        posts: posts.posts.filter(post => post.category === ownProps.match.params.id && !post.deleted),
         postFormState: posts.postFormState
     };
 };

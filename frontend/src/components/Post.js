@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import Moment from 'react-moment';
-import {Grid, Row, Col, Panel, ButtonToolbar, Button, FormControl, FormGroup, Form} from 'react-bootstrap';
+import { Row, Col, Panel, ButtonToolbar, Button, FormControl, FormGroup, Form } from 'react-bootstrap';
 
 export default function Post({
     post,
@@ -14,16 +14,16 @@ export default function Post({
     return (
         <Panel>
             <div className="panel-heading">
-                <h2>{post.title}</h2>
+                <h2>{post ? post.title : ''}</h2>
             </div>
             <Row>
-                <Col xs={12}><p className="Author">Author: {post.author}</p></Col>
+                <Col xs={12}><p className="Author">Author: {post ? post.author : ''}</p></Col>
             </Row>
             <Row>
-                <Col xs={12}> <pre>{post.body}</pre></Col>
+                <Col xs={12}> <pre>{post ? post.body : ''}</pre></Col>
             </Row>
             <Row>
-                <Col xs={12}><p>Date: <Moment format="YYYY-MMM-DD">{post.timestamp}</Moment></p></Col>
+                <Col xs={12}><p>Date: <Moment format="YYYY-MMM-DD">{post ? post.timestamp : ''}</Moment></p></Col>
             </Row>
             <Row>
                 <Col xs={12}>
@@ -40,7 +40,7 @@ export default function Post({
                                 onBlur={() => {
                                     updatePost(postFormState);
                                 }}
-                                value={postFormState.id && postFormState.id == post.id ? postFormState.voteScore : post.voteScore} />
+                                value={postFormState.id && postFormState.id === post.id ? postFormState.voteScore : post.voteScore} />
                         </FormGroup>
                     </Form>
                 </Col>

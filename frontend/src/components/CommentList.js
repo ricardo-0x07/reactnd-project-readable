@@ -1,7 +1,6 @@
 import React from 'react'
 import Moment from 'react-moment';
-import {Link} from 'react-router-dom';
-import {Grid, Row, Col, Panel, ListGroup, ListGroupItem, ButtonToolbar, Button} from 'react-bootstrap';
+import { Panel, ListGroup, ListGroupItem, ButtonToolbar, Button } from 'react-bootstrap';
 
 export default function CommentList({
     list,
@@ -15,7 +14,6 @@ export default function CommentList({
     onDelete,
     onCommentVoteScoreSelected
 }) {
-    console.log('list', list);
     return (
         <Panel >
             <h4 className="title">
@@ -24,8 +22,8 @@ export default function CommentList({
             <ListGroup>
                 {list.sort((a, b) => b.voteScore - a.voteScore).map(item => (
                     <ListGroupItem key={item.id} className="PostListItem">
-                        {selectedId != item.id && <pre onClick={() => onCommentSelected(item)}>{item.body}</pre>}
-                        {selectedId == item.id && <textarea
+                        {selectedId !== item.id && <pre onClick={() => onCommentSelected(item)}>{item.body}</pre>}
+                        {selectedId === item.id && <textarea
                             onBlur={() => {
                                 onCommentUnSelected();
                                 updateComment(commentFormState);
@@ -47,7 +45,7 @@ export default function CommentList({
                                 onBlur={() => {
                                     updateComment(commentFormState);
                                 }}
-                                value={commentFormState.id == item.id ? commentFormState.voteScore : item.voteScore} />
+                                value={commentFormState.id === item.id ? commentFormState.voteScore : item.voteScore} />
                         </div>
                         <div>
                             Date: <Moment format="YYYY-MMM-DD">{item.timestamp}</Moment>

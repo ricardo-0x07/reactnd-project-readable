@@ -1,20 +1,19 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import Moment from 'react-moment';
-import {Grid, Row, Col, Panel, ListGroupItem, ButtonToolbar, Button, FormControl, FormGroup, Form} from 'react-bootstrap';
+import { Row, Col, ListGroupItem, FormControl, FormGroup, Form} from 'react-bootstrap';
 
 export default function Post({
     post,
-    onDelete,
     postFormState,
     onPostVoteScoreSelected,
     onChange,
     updatePost
 }) {
     return (
-        <ListGroupItem>
+        <ListGroupItem key={post.id}>
             <div className="panel-heading">
-                <h2>{post.title}</h2>
+                <h5>{post.title}</h5>
             </div>
             <Row>
                 <Col xs={12}><p className="Author">Author: {post.author}</p></Col>
@@ -37,7 +36,7 @@ export default function Post({
                                 onBlur={() => {
                                     updatePost(postFormState);
                                 }}
-                                value={postFormState.id && postFormState.id == post.id ? postFormState.voteScore : post.voteScore} />
+                                value={postFormState.id && postFormState.id === post.id ? postFormState.voteScore : post.voteScore} />
                         </FormGroup>
                     </Form>
                 </Col>

@@ -1,8 +1,7 @@
 import React from 'react';
-import {Grid, Row, Col, Panel, ListGroup, ListGroupItem, ButtonToolbar, Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 export default function CommentForm({ onSave, onChange, comment, errors, saving }) {
-    console.log('comment', comment);
     return (
         <div className="comment-form-container">
             <div className="title">

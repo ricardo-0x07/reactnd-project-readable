@@ -28,7 +28,6 @@ const INITIAL_STATE = {
 const postFormStateName = 'postFormState';
 
 export default(state = INITIAL_STATE, action) => {
-    console.log('POSTS ACTIONS action', action);
     const posts = 'posts';
     const sortBy = 'sortBy';
     switch (action.type) {

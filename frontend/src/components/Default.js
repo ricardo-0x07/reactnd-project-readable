@@ -1,9 +1,9 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { connect } from 'react-redux';
-import {Grid, Row, Col, Panel} from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 import {
     categoriesFetch,
     postsFetch,
@@ -74,7 +74,7 @@ class Default extends React.Component {
         this.props.sortUpdate({prop: 'sortBy', value: ''});
     }
     updateSort = value => {
-        if(this.props.sortBy == value) {
+        if(this.props.sortBy === value) {
             this.props.sortUpdate({prop: 'sortBy', value});
             let list = this.props.posts.reverse();
             return this.props.updatePosts(list);
@@ -158,8 +158,6 @@ class Default extends React.Component {
 
 const mapStateToProps = state => {
     const { categories, posts } = state;
-    console.log('default state', state);
-
     return {
         sortBy: posts.sortBy,
         categories,

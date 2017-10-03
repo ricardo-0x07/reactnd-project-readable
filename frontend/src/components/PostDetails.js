@@ -1,13 +1,10 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
-import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import Modal from 'react-modal';
 import uuidv1 from 'uuid/v1';
 import toastr from 'toastr';
-import {Grid, Row, Col, Panel, ListGroup, ListGroupItem, ButtonToolbar, Button} from 'react-bootstrap';
-import { 
+import { Grid, Panel, Button } from 'react-bootstrap';
+import {
     postsFetch,
     categoriesFetch,
     commentsFetch,
@@ -27,7 +24,6 @@ import CommentForm from './CommentForm';
 
 class PostDetails extends React.Component {
     static propTypes = {
-        // post: PropTypes.object.isRequired,
         posts: PropTypes.array.isRequired,
         postsFetch: PropTypes.func.isRequired
     }
@@ -35,7 +31,8 @@ class PostDetails extends React.Component {
         console.log('PostDetails componentDidMount');
         this
             .props
-            .commentsFetch(this.props.post.id);
+            .commentsFetch(this.props.match.params.id);
+        this.props.postsFetch();
     }
     onDelete = id => {
         const _that = this;
@@ -47,7 +44,6 @@ class PostDetails extends React.Component {
             });
     }
     onCommentDelete = id => {
-        const _that = this;
         this.props.commentDelete(id);
     }
     updateComment = comment => {
@@ -149,7 +145,6 @@ class PostDetails extends React.Component {
     }
 
     render() {
-        console.log('Comment this.props', this.props);
         const {
             post,
             comments,
@@ -161,14 +156,14 @@ class PostDetails extends React.Component {
         } = this.props;
         return (
             <Grid>
-                <Post
+                {post && <Post
                     post={post}
                     onDelete={this.onDelete}
                     postFormState={postFormState}
                     onChange={this.updatePostState}
                     updatePost={this.updatePost}
                     onPostVoteScoreSelected={this.onPostVoteScoreSelected}
-                />
+                />}
                 <CommentList
                     commentFormState={commentFormState}
                     errors={errors}
@@ -200,8 +195,6 @@ class PostDetails extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log('Post state', state);
-    console.log('ownProps', ownProps);
     const {posts, comments} = state;
     let { commentFormState, errors, saving, newComment } = comments;
     return {
@@ -214,7 +207,7 @@ const mapStateToProps = (state, ownProps) => {
         posts: posts.posts,
         post: posts
             .posts
-            .filter(post => post.id == ownProps.match.params.id)[0],
+            .filter(post => post.id === ownProps.match.params.id)[0],
         postFormState: posts.postFormState
     };
 };

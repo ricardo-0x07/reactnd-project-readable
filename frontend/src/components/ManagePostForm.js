@@ -7,10 +7,20 @@ import {postsFetch, createPost, updatePost, categoriesFetch, postFormStateUpdate
 import PostForm from './PostForm';
 
 class ManagePostForm extends React.Component {
-    static propTypes = {}
+    static propTypes = {
+        categories: PropTypes.array.isRequired,
+        postFormState: PropTypes.object.isRequired,
+        errors: PropTypes.object.isRequired,
+        saving: PropTypes.bool.isRequired,
+        postsFetch: PropTypes.func.isRequired,
+        createPost: PropTypes.func.isRequired,
+        updatePost: PropTypes.func.isRequired,
+        categoriesFetch: PropTypes.func.isRequired,
+        postFormStateUpdate: PropTypes.func.isRequired,
+        postFormUpdate: PropTypes.func.isRequired
+    }
 
     componentDidMount() {
-        console.log('componentDidMount');
         this
             .props
             .postsFetch();
@@ -18,11 +28,8 @@ class ManagePostForm extends React.Component {
     }
 
     updatePostState = event => {
-        console.log('event.target.name', event.target.name);
-        console.log('event.target.value', event.target.value);
         const field = event.target.name;
         this.props.postFormState[field] = event.target.value;
-        console.log('this.props.postFormState', this.props.postFormState);
         this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
     }
 
@@ -47,7 +54,6 @@ class ManagePostForm extends React.Component {
         return formIsValid;
     }
     save = event => {
-        // let { saving, postFormState, errors } =  this.props;
         event.preventDefault();
 
         if(!this.formIsValid()) {
@@ -92,11 +98,10 @@ class ManagePostForm extends React.Component {
         this
             .props
             .history
-            .push('/');
+            .goBack();
     }
 
     render() {
-        console.log('render this.props', this.props);
         const {postFormState, errors, saving, categories} = this.props;
         return (
             <PostForm
@@ -111,8 +116,6 @@ class ManagePostForm extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log('ManagePostForm mapStateToProps state', state);
-    console.log('ManagePostForm mapStateToProps ownProps', ownProps);
     const {posts, categories } = state;
     let { postFormState, errors, saving } = posts;
     if(ownProps.match.params.id && !postFormState.id) {

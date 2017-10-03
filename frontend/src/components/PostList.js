@@ -1,23 +1,14 @@
 import React from 'react'
-import Moment from 'react-moment';
-import {Link} from 'react-router-dom';
-import {ButtonGroup, Button, ListGroup, ListGroupItem, Panel} from 'react-bootstrap';
+import {ButtonGroup, Button, ListGroup, Panel} from 'react-bootstrap';
 import PostItem from './PostItem';
 
 export default function PostList({
     list,
     onSort,
-    sortBy,
     postFormState,
     onPostVoteScoreSelected,
-    onChange,
-    updatePost
+    onChange
 }) {
-    console.log('list', list);
-    console.log('sortBy', sortBy);
-    // let sortedList = list.sort(sortOptions[sortBy]);
-    // console.log('sortedList', sortedList);
-    // onUpdate(sortedList);
     return (
         <Panel header="Posts"  className='PostList'>
             <ButtonGroup >
@@ -27,6 +18,7 @@ export default function PostList({
             <ListGroup>
                 {list.map(item => (
                     <PostItem
+                        key={item.id}
                         post={item}
                         onPostVoteScoreSelected={onPostVoteScoreSelected}
                         onChange={onChange}

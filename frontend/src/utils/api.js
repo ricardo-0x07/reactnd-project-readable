@@ -27,9 +27,7 @@ export const getPosts = () =>
     fetch(`${api}/posts`, { headers })
         .then(res => res.json())
         .then(data => {
-            console.log('voteScore fn');
             return data.sort((a, b) => {
-                console.log('voteScore sort data', data);
                 if(a.voteScore > b.voteScore) {
                     return -1;
                 }
@@ -99,9 +97,7 @@ export const getPostComments = postId =>
     fetch(`${api}/posts/${postId}/comments`, { headers })
         .then(res => res.json())
         .then(data => {
-            console.log('getPostComments data', data);
             return data.sort((a, b) => {
-                console.log('voteScore sort data', data);
                 if(a.voteScore > b.voteScore) {
                     return -1;
                 }
