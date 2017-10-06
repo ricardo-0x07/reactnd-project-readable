@@ -46,7 +46,6 @@ class ManagePostForm extends React.Component {
     }
 
     formIsValid() {
-        console.log('formIsValid this.props', this.props);
         let formIsValid = true;
 
         if(this.props.postFormState.title.length < 5) {
@@ -80,17 +79,14 @@ class ManagePostForm extends React.Component {
         event.preventDefault();
 
         if(!this.formIsValid()) {
-            console.log('form invalid', this.props.errors);
             return;
         }
 
-        console.log('createPost this.props.postFormState', this.props.postFormState);
         this.props.postFormUpdate({key: 'saving', value: true});
         if(this.props.postFormState.id) {
             return this.updatePost(this.props.postFormState);
         }
 
-        console.log('createPost this.props.postFormState', this.props.postFormState);
         this.props.postFormState.timestamp = Date.now();
         this.props.postFormState.id = uuidv1();
         
@@ -147,8 +143,6 @@ class ManagePostForm extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    console.log('ownProps', ownProps);
-    console.log('state', state);
     const {posts, categories } = state;
     let { postFormState, errors, saving } = posts;
     if(ownProps.match.params.id && !postFormState.id) {

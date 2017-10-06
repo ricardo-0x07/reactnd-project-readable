@@ -11,7 +11,6 @@ export default function PostList({
     downVote,
     onDelete
 }) {
-    console.log('list', list);
     return (
         <Panel header="Posts"  className='PostList'>
             <ButtonGroup >

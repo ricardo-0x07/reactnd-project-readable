@@ -17,7 +17,6 @@ class Default extends React.Component {
     }
     sortOptions = {
         voteScore: (a, b) => {
-            console.log('voteScore fn');
             if(a.voteScore > b.voteScore) {
                 return 1;
             }
@@ -27,7 +26,6 @@ class Default extends React.Component {
             return 0;
         },
         voteScoreReverse: (a, b) => {
-            console.log('voteScoreReverse fn');
             if(b.voteScore > a.voteScore) {
                 return 1;
             }
@@ -37,7 +35,6 @@ class Default extends React.Component {
             return 0;
         },
         timeStamp: (a, b) => {
-            console.log('timeStamp fn ');
             if(a.timestamp > b.timestamp) {
                 return 1;
             }
@@ -47,7 +44,6 @@ class Default extends React.Component {
             return 0;
         },
         timeStampReverse: (a, b) => {
-            console.log('timeStampReverse fn');
             if(b.timestamp > a.timestamp) {
                 return 1;
             }
@@ -59,7 +55,6 @@ class Default extends React.Component {
     };
 
     componentDidMount() {
-        console.log('componentDidMount this.props',  this.props);
         this.props.categoriesFetch();
         this.props.postsFetch();
     }
@@ -113,11 +108,8 @@ class Default extends React.Component {
     }
 
     updatePostState = event => {
-        console.log('event.target.name', event.target.name);
-        console.log('event.target.value', event.target.value);
         const field = event.target.name;
         this.props.postFormState[field] = event.target.value;
-        console.log('this.props.postFormState', this.props.postFormState);
         this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
     }
 

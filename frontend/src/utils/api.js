@@ -30,9 +30,7 @@ export const getPosts = () =>
             const list =  data.map(post => {
                 return getPostComments(post.id)
                     .then(comments => {
-                        console.log('comments', comments);
                         post.comments = comments.length;
-                        console.log('post', post);
                         return post;
                     })
                     .catch(error => console.log('error', error));
@@ -40,7 +38,6 @@ export const getPosts = () =>
             return Promise.all(list);
         })
         .then(data => {
-            console.log('data', data);
             return data.sort((a, b) => {
                 if(a.voteScore > b.voteScore) {
                     return -1;
@@ -54,7 +51,6 @@ export const getPosts = () =>
         .catch(error => console.log('error', error));
 
 export const createPost = post => {
-    console.log('API createPost post', post);
     return fetch(`${api}/posts`, {
         method: 'POST',
         headers: {
@@ -153,7 +149,6 @@ export const voteOnComment = (vote, commentId) =>
         .then(data => data.comment);
 
 export const updateComment = comment => {
-    console.log('comment', comment);
     return fetch(`${api}/comments/${comment.id}`, {
         method: 'PUT',
         headers: {

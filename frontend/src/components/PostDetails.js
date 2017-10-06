@@ -15,7 +15,7 @@ class PostDetails extends React.Component {
         posts: PropTypes.array.isRequired,
         postsFetch: PropTypes.func.isRequired
     }
-    componentDidMount() {
+    componentWillMount() {
         console.log('PostDetails componentDidMount');
         this
             .props
@@ -160,8 +160,7 @@ class PostDetails extends React.Component {
 
     focusTextInput(element) {
         if(element) {
-            console.log('element', element);
-            element.focus();    
+            element.focus();
         }
     }
     upVote = post => {
@@ -177,13 +176,14 @@ class PostDetails extends React.Component {
     render() {
         const {
             post,
+            posts,
             comments,
             selectedId,
             commentFormState,
             errors,
             saving
         } = this.props;
-        if(!post) {
+        if(posts.length > 0 && !post) {
             this.props.history.push('/404');
         }
         return (
