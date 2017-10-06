@@ -3,24 +3,12 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import uuidv1 from 'uuid/v1';
 import toastr from 'toastr';
-import { Grid, Panel, Button } from 'react-bootstrap';
-import {
-    postsFetch,
-    categoriesFetch,
-    commentsFetch,
-    postDelete,
-    commentDelete,
-    onCommentSelected,
-    updateComment,
-    createComment,
-    commentFormUpdate,
-    commentFormStateUpdate,
-    updatePost,
-    postFormStateUpdate
-} from '../actions';
+import { Grid, Panel } from 'react-bootstrap';
+import * as actions from '../actions';
 import Post from './Post';
 import CommentList from './CommentList';
 import CommentForm from './CommentForm';
+import Button from 'material-ui/Button';
 
 class PostDetails extends React.Component {
     static propTypes = {
@@ -44,11 +32,18 @@ class PostDetails extends React.Component {
             });
     }
     onCommentDelete = id => {
-        this.props.commentDelete(id);
+        this.props.commentDelete(id)
+            .then(() => {
+                this.props.commentsFetch(this.props.post.id);
+                this.props.postsFetch();
+            });
     }
     updateComment = comment => {
         this.props.updateComment(comment)
-            .then(() => this.props.commentsFetch(this.props.post.id));
+            .then(() => {
+                this.props.commentsFetch(this.props.post.id);
+                this.props.postsFetch();
+            });
     }
     redirect = () => {
         this
@@ -60,6 +55,7 @@ class PostDetails extends React.Component {
         const field = event.target.name;
         this.props.commentFormState[field] = event.target.value;
         this.props.commentFormStateUpdate({key: 'commentFormState', value: this.props.commentFormState});
+        this.formIsValid();
     }
     onVoteChange = event => {
         const field = event.target.name;
@@ -94,6 +90,7 @@ class PostDetails extends React.Component {
             .then(() => {
                 // this.redirect();
                 this.resetFormState();
+                this.props.postsFetch();
             })
             .catch(error => {
                 toastr.error(error);
@@ -103,11 +100,19 @@ class PostDetails extends React.Component {
     formIsValid() {
         let formIsValid = true;
 
-        if(this.props.commentFormState.body.length < 5) {
-            this.props.errors.body = 'Comment must be at least 5 characters.';
+        if(this.props.commentFormState.body.length < 10) {
+            this.props.errors.body = 'Comment must be at least 10 characters.';
             this.props.commentFormUpdate({key: 'errors', value: this.props.errors});
-            formIsValid = false;
+            return false;
         }
+        this.props.errors.body = '';
+        if(this.props.commentFormState.author.length < 2) {
+            this.props.errors.author = 'Author must be at least 2 characters.';
+            this.props.commentFormUpdate({key: 'errors', value: this.props.errors});
+            return false;
+        }
+        this.props.errors.author = '';
+        this.props.commentFormUpdate({key: 'errors', value: this.props.errors});
         return formIsValid;
     }
     resetFormState = () => {
@@ -143,6 +148,31 @@ class PostDetails extends React.Component {
                 _that.resetFormState();
             });
     }
+    upCommentVote = comment => {
+        comment.voteScore += 1;
+        this.props.updateComment(comment);
+    }
+
+    downCommentVote = comment => {
+        comment.voteScore -= 1;
+        this.props.updateComment(comment);
+    }
+
+    focusTextInput(element) {
+        if(element) {
+            console.log('element', element);
+            element.focus();    
+        }
+    }
+    upVote = post => {
+        post.voteScore += 1;
+        this.props.updatePost(post);
+    }
+
+    downVote = post => {
+        post.voteScore -= 1;
+        this.props.updatePost(post);
+    }
 
     render() {
         const {
@@ -151,18 +181,18 @@ class PostDetails extends React.Component {
             selectedId,
             commentFormState,
             errors,
-            saving,
-            postFormState
+            saving
         } = this.props;
+        if(!post) {
+            this.props.history.push('/404');
+        }
         return (
             <Grid>
                 {post && <Post
                     post={post}
                     onDelete={this.onDelete}
-                    postFormState={postFormState}
-                    onChange={this.updatePostState}
-                    updatePost={this.updatePost}
-                    onPostVoteScoreSelected={this.onPostVoteScoreSelected}
+                    upVote={this.upVote}
+                    downVote={this.downVote}
                 />}
                 <CommentList
                     commentFormState={commentFormState}
@@ -176,9 +206,12 @@ class PostDetails extends React.Component {
                     onChange={this.updateCommentState}
                     onDelete={this.onCommentDelete}
                     onCommentVoteScoreSelected={this.onCommentVoteScoreSelected}
+                    focusTextInput={this.focusTextInput}
+                    downVote={this.downCommentVote}
+                    upVote={this.upCommentVote}
                 />
                 <Panel>
-                    {(!this.props.newComment || selectedId) && <Button onClick={() => {
+                    {(!this.props.newComment || selectedId) && <Button raised color="primary" onClick={() => {
                         this.props.commentFormUpdate({key: 'newComment', value: true});
                     }}>New Comment</Button>}
                     {this.props.newComment && !selectedId && <CommentForm
@@ -212,17 +245,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps, {
-    categoriesFetch,
-    postsFetch,
-    commentsFetch,
-    postDelete,
-    commentDelete,
-    onCommentSelected,
-    updateComment,
-    createComment,
-    commentFormUpdate,
-    commentFormStateUpdate,
-    updatePost,
-    postFormStateUpdate
-})(PostDetails);
+export default connect(mapStateToProps, actions)(PostDetails);

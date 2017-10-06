@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+
 .App {
+  font-family: 'Roboto', sans-serif;
 }
 
 .App-logo {
@@ -49,6 +52,14 @@
 
 ul {
   list-style-type: none;
+}
+
+.Card {
+  margin: 5px;
+}
+
+.Button {
+  margin: 5px;
 }
 
 .create-post-form {

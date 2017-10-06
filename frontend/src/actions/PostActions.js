@@ -11,16 +11,24 @@ import {
     POST_DELETE_SUCCESS
 } from './types';
 import * as API from '../utils/api';
+import { postCommentsFetch } from './CommentActions';
 
 export const postsFetch = () => {
     return dispatch => {
         API
             .getPosts()
+            // .then(response => {
+            //     const posts = [...response];
+            //     console.log('postsFetch posts', posts);
+            //     posts.map(post => postCommentsFetch(post.id));
+            //     return response;
+            // })
             .then(response => {
                 dispatch({ type: POSTS_FETCH_SUCCESS, payload: response });
             });
     };
 };
+
 
 export const postFetch = id => {
     return dispatch => {
@@ -72,6 +80,7 @@ export const postFormUpdate = update => {
 };
 
 export const updatePost = post => {
+    delete post.comment;
     return dispatch => {
         return API
             .updatePost(post)
@@ -90,3 +99,9 @@ export const createPost = post => {
             });
     };
 };
+
+function getComments(response) {
+    const posts = [...response];
+    posts.map(post => postCommentsFetch(post.id));
+    return response;
+}

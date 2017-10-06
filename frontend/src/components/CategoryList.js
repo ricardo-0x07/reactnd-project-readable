@@ -1,17 +1,18 @@
 import React from 'react'
 import {Link} from 'react-router-dom';
 import { ListGroup, ListGroupItem, Panel } from 'react-bootstrap';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
 export default function CategoryList({list}) {
     return (
         <Panel header="Categories" className='CategoryList'>
-            <ListGroup>
+            <List>
                 {list.map(item => (
-                    <ListGroupItem key={item.name} className="CategoryListItem">
+                    <ListItem key={item.name} className="CategoryListItem" button>
                         <Link to={`/category/${item.name}`}>{item.name}</Link>
-                    </ListGroupItem>
+                    </ListItem>
                 ))}
-            </ListGroup>
+            </List>
         </Panel>
     );
 }

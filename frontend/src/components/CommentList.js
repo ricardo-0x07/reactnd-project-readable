@@ -1,6 +1,7 @@
 import React from 'react'
 import Moment from 'react-moment';
 import { Panel, ListGroup, ListGroupItem, ButtonToolbar, Button } from 'react-bootstrap';
+import CommentItem from './CommentItem';
 
 export default function CommentList({
     list,
@@ -8,12 +9,15 @@ export default function CommentList({
     selectedId,
     updateComment,
     onChange,
-    onVoteChange,
     commentFormState,
     onCommentUnSelected,
     onDelete,
-    onCommentVoteScoreSelected
+    onCommentVoteScoreSelected,
+    focusTextInput,
+    upVote,
+    downVote
 }) {
+    // let textareaElement = null;
     return (
         <Panel >
             <h4 className="title">
@@ -21,40 +25,21 @@ export default function CommentList({
             </h4>
             <ListGroup>
                 {list.sort((a, b) => b.voteScore - a.voteScore).map(item => (
-                    <ListGroupItem key={item.id} className="PostListItem">
-                        {selectedId !== item.id && <pre onClick={() => onCommentSelected(item)}>{item.body}</pre>}
-                        {selectedId === item.id && <textarea
-                            onBlur={() => {
-                                onCommentUnSelected();
-                                updateComment(commentFormState);
-                            }}
-                            name="body"
-                            className="form-control"
-                            value={commentFormState.body}
-                            onChange={onChange}
-                        ></textarea>}
-                        <p className="Author">Author: {item.author}</p>
-                        <div>Vote Score:
-                            <input
-                                className="form-control"
-                                name="voteScore"
-                                id="number"
-                                type="number"
-                                onFocus={() => onCommentVoteScoreSelected(item)}
-                                onChange={onChange}
-                                onBlur={() => {
-                                    updateComment(commentFormState);
-                                }}
-                                value={commentFormState.id === item.id ? commentFormState.voteScore : item.voteScore} />
-                        </div>
-                        <div>
-                            Date: <Moment format="YYYY-MMM-DD">{item.timestamp}</Moment>
-                        </div>
-                        <ButtonToolbar>
-                            <Button onClick={() => onCommentSelected(item)}>Edit</Button>
-                            <Button onClick={() => onDelete(item.id)}>Delete</Button>
-                        </ButtonToolbar>
-                    </ListGroupItem>
+                    <CommentItem
+                        key={item.id} className="PostListItem"
+                        selectedId={selectedId}
+                        onCommentSelected={onCommentSelected}
+                        onCommentUnSelected={onCommentUnSelected}
+                        updateComment={updateComment}
+                        commentFormState={commentFormState}
+                        onChange={onChange}
+                        focusTextInput={focusTextInput}
+                        comment={item}
+                        onCommentVoteScoreSelected={onCommentVoteScoreSelected}
+                        onDelete={onDelete}
+                        upVote={upVote}
+                        downVote={downVote}
+                    />
                 ))}
             </ListGroup>
         </Panel>

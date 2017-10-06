@@ -4,14 +4,8 @@ import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import {
-    categoriesFetch,
-    postsFetch,
-    sortUpdate,
-    updatePost,
-    postFormUpdate,
-    postFormStateUpdate
-} from '../actions';
+import Button from 'material-ui/Button';
+import * as actions from '../actions';
 import CategoryList from './CategoryList';
 import PostList from './PostList';
 
@@ -30,8 +24,54 @@ class Category extends React.Component {
     clearSort = () => {
         this.props.sortUpdate({prop: 'sortBy', value: ''});
     }
+    sortOptions = {
+        voteScore: (a, b) => {
+            if(a.voteScore > b.voteScore) {
+                return 1;
+            }
+            if(a.voteScore < b.voteScore) {
+                return -1;
+            }
+            return 0;
+        },
+        voteScoreReverse: (a, b) => {
+            if(b.voteScore > a.voteScore) {
+                return 1;
+            }
+            if(b.voteScore < a.voteScore) {
+                return -1;
+            }
+            return 0;
+        },
+        timeStamp: (a, b) => {
+            if(a.timestamp > b.timestamp) {
+                return 1;
+            }
+            if(a.timestamp < b.timestamp) {
+                return -1;
+            }
+            return 0;
+        },
+        timeStampReverse: (a, b) => {
+            if(b.timestamp > a.timestamp) {
+                return 1;
+            }
+            if(b.timestamp < a.timestamp) {
+                return -1;
+            }
+            return 0;
+        }
+    };
     updateSort = value => {
+        if(this.props.sortBy === value) {
+            this.props.sortUpdate({prop: 'sortBy', value});
+            
+            let list = this.props.posts.reverse();
+            return this.props.updatePosts(list);
+        }
         this.props.sortUpdate({prop: 'sortBy', value});
+        let list = this.props.posts.sort(this.sortOptions[value]);
+        return this.props.updatePosts(list);
     }
 
     updatePost = post => {
@@ -73,13 +113,32 @@ class Category extends React.Component {
         this.props.postFormState[field] = event.target.value;
         this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
     }
+    upVote = post => {
+        post.voteScore += 1;
+        // this.props.postFormStateUpdate({key: 'postFormState', value: post});
+        this.props.updatePost(post);
+    }
+
+    downVote = post => {
+        post.voteScore -= 1;
+        // this.props.postFormStateUpdate({key: 'postFormState', value: post});
+        this.props.updatePost(post);
+    }
+
+    onDelete = id => {
+        const _that = this
+        this.props.postDelete(id)
+            .catch(error => {
+                console.log('onDelete error', error);
+            });
+    }
 
     render() {
         const { categories, posts, postFormState } = this.props;
         return (
             <Grid className="list-books">
                 <Row className="AddPost">
-                    <Link to="/create">New Post</Link>
+                    <Button><Link to="/create">New Post</Link></Button>
                 </Row>
                 <Row >
                     <Col className="DefaultContent">
@@ -87,11 +146,9 @@ class Category extends React.Component {
                         <PostList
                             list={posts}
                             onSort={this.updateSort}
-                            sortBy={this.props.sortBy}
-                            postFormState={postFormState}
-                            onChange={this.updatePostState}
-                            updatePost={this.updatePost}
-                            onPostVoteScoreSelected={this.onPostVoteScoreSelected}
+                            upVote={this.upVote}
+                            downVote={this.downVote}
+                            onDelete={this.onDelete}
                         />
                     </Col>
                 </Row>
@@ -111,11 +168,4 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-export default connect(mapStateToProps, {
-    categoriesFetch,
-    postsFetch,
-    sortUpdate,
-    updatePost,
-    postFormUpdate,
-    postFormStateUpdate
-})(Category);
+export default connect(mapStateToProps, actions)(Category);

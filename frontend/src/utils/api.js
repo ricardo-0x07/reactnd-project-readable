@@ -1,5 +1,5 @@
 
-const api = "http://localhost:3000"
+const api = "http://localhost:3001"
 
 
 // Generate a unique token for storing your bookshelf data on the backend server.
@@ -27,6 +27,20 @@ export const getPosts = () =>
     fetch(`${api}/posts`, { headers })
         .then(res => res.json())
         .then(data => {
+            const list =  data.map(post => {
+                return getPostComments(post.id)
+                    .then(comments => {
+                        console.log('comments', comments);
+                        post.comments = comments.length;
+                        console.log('post', post);
+                        return post;
+                    })
+                    .catch(error => console.log('error', error));
+            });
+            return Promise.all(list);
+        })
+        .then(data => {
+            console.log('data', data);
             return data.sort((a, b) => {
                 if(a.voteScore > b.voteScore) {
                     return -1;
@@ -36,7 +50,8 @@ export const getPosts = () =>
                 }
                 return 0;
             });
-        });
+        })
+        .catch(error => console.log('error', error));
 
 export const createPost = post => {
     console.log('API createPost post', post);
@@ -137,8 +152,9 @@ export const voteOnComment = (vote, commentId) =>
         .then(res => res.json())
         .then(data => data.comment);
 
-export const updateComment = comment =>
-    fetch(`${api}/comments/${comment.id}`, {
+export const updateComment = comment => {
+    console.log('comment', comment);
+    return fetch(`${api}/comments/${comment.id}`, {
         method: 'PUT',
         headers: {
             ...headers,
@@ -148,7 +164,7 @@ export const updateComment = comment =>
     })
         .then(res => res.json())
         .then(data => data);
-
+};
 export const deleteComment = commentId =>
     fetch(`${api}/comments/${commentId}`, {
         method: 'DELETE',

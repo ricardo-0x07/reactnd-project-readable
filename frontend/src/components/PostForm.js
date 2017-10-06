@@ -56,7 +56,7 @@ export default function PostForm({ onSave, onChange, post, errors, saving, optio
                                     name='category'>
                                     <option value="">Select Category</option>
                                     {options.map(option => {
-                                        return <option key={option.name} value={option.name} className='SelectOptions'>{option.name}</option>;
+                                        return <option key={option} value={option} className='SelectOptions'>{option}</option>;
                                     })}
                                 </select>
                                 {errors.category && <div className="alert alert-danger">{errors.category}</div>}

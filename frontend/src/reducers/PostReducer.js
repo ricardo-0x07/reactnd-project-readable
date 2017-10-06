@@ -36,11 +36,17 @@ export default(state = INITIAL_STATE, action) => {
         case POST_CREATION_SUCCESS:
             return {...state, [posts]: [...state[posts], Object.assign({}, action.payload)], [postFormStateName]: Object.assign({}, postFormState), errors, saving};
         case POST_UPDATE_SUCCESS:
-            return {...state, [posts]: [...state[posts].filter(post => post.id !== action.payload.id), Object.assign({}, action.payload)]};
+            let list = state.posts.map(cv => {
+                if(action.payload.id === cv.id) {
+                    return action.payload;
+                }
+                return cv;
+            });
+            return {...state, [posts]: [...list]};
         case POST_FORM_STATE_UPDATE_SUCCESS:
             return {...state, [action.payload.key]: Object.assign({}, action.payload.value)};
         case POST_FORM_UPDATE_SUCCESS:
-            return {...state, [action.payload.key]: action.payload.value};
+            return {...state, [action.payload.key]: action.payload.key === 'errors' ? Object.assign({}, action.payload.value) : action.payload.value};
         case POST_DELETE_SUCCESS:
             return {...state, [posts]: [...state[posts].filter(post => post.id !== action.payload.id)]};
         case SORT_UPDATE:

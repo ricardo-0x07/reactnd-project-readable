@@ -6,7 +6,8 @@ import {
     COMMENT_FORM_STATE_UPDATE_SUCCESS,
     COMMENT_FORM_UPDATE_SUCCESS,
     COMMENT_UPDATE_SUCCESS,
-    COMMENT_DELETE_SUCCESS
+    COMMENT_DELETE_SUCCESS,
+    POST_COMMENTS_FETCH_SUCCESS
 } from './types';
 import * as API from '../utils/api';
 
@@ -16,6 +17,17 @@ export const commentsFetch = postId => {
             .getPostComments(postId)
             .then(response => {
                 dispatch({ type: COMMENTS_FETCH_SUCCESS, payload: response });
+            });
+    };
+};
+
+export const postCommentsFetch = postId => {
+    return dispatch => {
+        console.log('getComments id', postId);
+        API
+            .getPostComments(postId)
+            .then(response => {
+                dispatch({ type: POST_COMMENTS_FETCH_SUCCESS, payload: {key: postId, value: response} });
             });
     };
 };

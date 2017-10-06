@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import Button from 'material-ui/Button';
 
 export default function CommentForm({ onSave, onChange, comment, errors, saving }) {
     return (
@@ -33,7 +33,7 @@ export default function CommentForm({ onSave, onChange, comment, errors, saving 
                                 placeholder='Author'/>
                             {errors.author && <div className="alert alert-danger">{errors.author}</div>}
                         </div>
-                        <Button className='form-control btn btn-primary'
+                        <Button raised color="primary"
                             type="submit"
                             disabled={saving}
                             onClick={onSave}

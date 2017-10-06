@@ -4,15 +4,8 @@ import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import {
-    categoriesFetch,
-    postsFetch,
-    sortUpdate,
-    updatePosts,
-    updatePost,
-    postFormUpdate,
-    postFormStateUpdate
-} from '../actions';
+import Button from 'material-ui/Button';
+import * as actions from '../actions';
 import CategoryList from './CategoryList';
 import PostList from './PostList';
 
@@ -66,6 +59,7 @@ class Default extends React.Component {
     };
 
     componentDidMount() {
+        console.log('componentDidMount this.props',  this.props);
         this.props.categoriesFetch();
         this.props.postsFetch();
     }
@@ -76,6 +70,7 @@ class Default extends React.Component {
     updateSort = value => {
         if(this.props.sortBy === value) {
             this.props.sortUpdate({prop: 'sortBy', value});
+            
             let list = this.props.posts.reverse();
             return this.props.updatePosts(list);
         }
@@ -126,16 +121,42 @@ class Default extends React.Component {
         this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
     }
 
+    upVote = post => {
+        post.voteScore += 1;
+        // this.props.postFormStateUpdate({key: 'postFormState', value: post});
+        this.props.updatePost(post);
+    }
+
+    downVote = post => {
+        post.voteScore -= 1;
+        // this.props.postFormStateUpdate({key: 'postFormState', value: post});
+        this.props.updatePost(post);
+    }
+
+    onDelete = id => {
+        const _that = this;
+        this.props.postDelete(id)
+            .then(() => _that.redirect())
+            .catch(error => {
+                _that.redirect();
+                console.log('onDelete error', error);
+            });
+    }
+
     onUpdate = list => {
         this.props.updatePosts(list);
     }
 
+    getComments = id => {
+        return this.props.postCommentsFetch(id);
+    }
+
     render() {
-        const { categories, posts, postFormState } = this.props;
+        const { categories, posts } = this.props;
         return (
             <Grid >
                 <Row className="AddPost">
-                    <Link to="/create">New Post</Link>
+                    <Button><Link to="/create">New Post</Link></Button>
                 </Row>
                 <Row >
                     <Col className="DefaultContent">
@@ -143,12 +164,10 @@ class Default extends React.Component {
                         <PostList
                             list={posts}
                             onSort={this.updateSort}
-                            onUpdate={this.onUpdate}
-                            postFormState={postFormState}
-                            onChange={this.updatePostState}
-                            updatePost={this.updatePost}
-                            onPostVoteScoreSelected={this.onPostVoteScoreSelected}
-                            sortBy={this.props.sortBy}/>
+                            upVote={this.upVote}
+                            downVote={this.downVote}
+                            onDelete={this.onDelete}
+                        />
                     </Col>
                 </Row>
             </Grid>
@@ -166,12 +185,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, {
-    categoriesFetch,
-    postsFetch,
-    sortUpdate,
-    updatePosts,
-    updatePost,
-    postFormUpdate,
-    postFormStateUpdate
-})(Default);
+export default connect(mapStateToProps, actions)(Default);

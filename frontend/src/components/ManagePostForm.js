@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import toastr from 'toastr';
 import uuidv1 from 'uuid/v1';
-import {postsFetch, createPost, updatePost, categoriesFetch, postFormStateUpdate, postFormUpdate} from '../actions';
+import * as actions from '../actions';
 import PostForm from './PostForm';
 
 class ManagePostForm extends React.Component {
@@ -31,9 +31,11 @@ class ManagePostForm extends React.Component {
         const field = event.target.name;
         this.props.postFormState[field] = event.target.value;
         this.props.postFormStateUpdate({key: 'postFormState', value: this.props.postFormState});
+        this.formIsValid();
     }
 
     resetFormState = () => {
+        this.props.postFormState.id = '';
         this.props.postFormState.title = '';
         this.props.postFormState.body = '';
         this.props.postFormState.author = '';
@@ -44,22 +46,45 @@ class ManagePostForm extends React.Component {
     }
 
     formIsValid() {
+        console.log('formIsValid this.props', this.props);
         let formIsValid = true;
 
         if(this.props.postFormState.title.length < 5) {
             this.props.errors.title = 'Title must be at least 5 characters.';
             this.props.postFormUpdate({key: 'errors', value: this.props.errors});
-            formIsValid = false;
+            return false;
         }
+        this.props.errors.title = '';
+        if(this.props.postFormState.body.length < 10) {
+            this.props.errors.body = 'Post must be at least 10 characters.';
+            this.props.postFormUpdate({key: 'errors', value: this.props.errors});
+            return false;
+        }
+        this.props.errors.body = '';
+        if(this.props.postFormState.author.length < 2) {
+            this.props.errors.author = 'Author must be at least 2 characters.';
+            this.props.postFormUpdate({key: 'errors', value: this.props.errors});
+            return false;
+        }
+        this.props.errors.author = '';
+        if(this.props.categories.indexOf(this.props.postFormState.category) === -1) {
+            this.props.errors.category = 'Kindly select a valid category';
+            this.props.postFormUpdate({key: 'errors', value: this.props.errors});
+            return false;
+        }
+        this.props.errors.category = '';
+        this.props.postFormUpdate({key: 'errors', value: this.props.errors});
         return formIsValid;
     }
     save = event => {
         event.preventDefault();
 
         if(!this.formIsValid()) {
+            console.log('form invalid', this.props.errors);
             return;
         }
 
+        console.log('createPost this.props.postFormState', this.props.postFormState);
         this.props.postFormUpdate({key: 'saving', value: true});
         if(this.props.postFormState.id) {
             return this.updatePost(this.props.postFormState);
@@ -72,7 +97,10 @@ class ManagePostForm extends React.Component {
         return this
             .props
             .createPost(this.props.postFormState)
-            .then(() => this.redirect())
+            .then(() => {
+                this.redirect();
+                this.resetFormState();
+            })
             .catch(error => {
                 toastr.error(error);
                 console.log('createPost error', error);
@@ -85,7 +113,10 @@ class ManagePostForm extends React.Component {
         _that
             .props
             .updatePost(post)
-            .then(() => _that.redirect())
+            .then(() => {
+                this.redirect();
+                this.resetFormState();
+            })
             .catch(error => {
                 toastr.error(error);
                 console.log('updatePost error', error);
@@ -116,24 +147,19 @@ class ManagePostForm extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+    console.log('ownProps', ownProps);
+    console.log('state', state);
     const {posts, categories } = state;
     let { postFormState, errors, saving } = posts;
     if(ownProps.match.params.id && !postFormState.id) {
         postFormState = posts.posts.filter(postItem => postItem.id === ownProps.match.params.id)[0];
     }
     return {
-        categories,
+        categories: categories.map(category => category.name),
         postFormState,
         errors,
         saving
     };
 };
 
-export default connect(mapStateToProps, {
-    postsFetch,
-    createPost,
-    updatePost,
-    categoriesFetch,
-    postFormStateUpdate,
-    postFormUpdate
-})(ManagePostForm);
+export default connect(mapStateToProps, actions)(ManagePostForm);
