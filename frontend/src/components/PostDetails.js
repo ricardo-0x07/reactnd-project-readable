@@ -73,6 +73,9 @@ class PostDetails extends React.Component {
         this.props.onCommentSelected('');
         this.resetFormState();
     }
+    cancel = () => {
+        this.resetFormState();
+    }
     save = event => {
         event.preventDefault();
 
@@ -194,6 +197,19 @@ class PostDetails extends React.Component {
                     upVote={this.upVote}
                     downVote={this.downVote}
                 />}
+                <Panel>
+                    {(!this.props.newComment || selectedId) && <Button raised color="primary" onClick={() => {
+                        this.props.commentFormUpdate({key: 'newComment', value: true});
+                    }}>New Comment</Button>}
+                    {this.props.newComment && !selectedId && <CommentForm
+                        comment={commentFormState}
+                        errors={errors}
+                        saving={saving}
+                        onSave={this.save}
+                        onChange={this.updateCommentState}
+                        cancel={this.cancel}
+                    />}
+                </Panel>
                 <CommentList
                     commentFormState={commentFormState}
                     errors={errors}
@@ -210,18 +226,6 @@ class PostDetails extends React.Component {
                     downVote={this.downCommentVote}
                     upVote={this.upCommentVote}
                 />
-                <Panel>
-                    {(!this.props.newComment || selectedId) && <Button raised color="primary" onClick={() => {
-                        this.props.commentFormUpdate({key: 'newComment', value: true});
-                    }}>New Comment</Button>}
-                    {this.props.newComment && !selectedId && <CommentForm
-                        comment={commentFormState}
-                        errors={errors}
-                        saving={saving}
-                        onSave={this.save}
-                        onChange={this.updateCommentState}
-                    />}
-                </Panel>
             </Grid>
         );
     }

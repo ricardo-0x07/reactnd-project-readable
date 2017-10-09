@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from 'material-ui/Button';
 
-export default function CommentForm({ onSave, onChange, comment, errors, saving }) {
+export default function CommentForm({ onSave, onChange, comment, errors, saving, cancel }) {
     return (
         <div className="comment-form-container">
             <div className="title">
@@ -33,11 +33,17 @@ export default function CommentForm({ onSave, onChange, comment, errors, saving 
                                 placeholder='Author'/>
                             {errors.author && <div className="alert alert-danger">{errors.author}</div>}
                         </div>
-                        <Button raised color="primary"
+                        <Button
+                            className="Button"
+                            raised
                             type="submit"
                             disabled={saving}
                             onClick={onSave}
                         >{saving ? 'Saving...' : 'Save'}</Button>
+                        <Button className="Button" raised color="primary" 
+                            type="button"
+                            onClick={cancel}
+                        >Cancel</Button>
                     </form>
                 </div>
             </div>
