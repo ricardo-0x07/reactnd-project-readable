@@ -15,13 +15,18 @@ class PostDetails extends React.Component {
         posts: PropTypes.array.isRequired,
         postsFetch: PropTypes.func.isRequired
     }
-    componentWillMount() {
-        console.log('PostDetails componentDidMount');
+    componentDidMount() {
         this
             .props
             .commentsFetch(this.props.match.params.id);
         this.props.postsFetch();
     }
+    componentDidUpdate() {
+        if(this.props.posts.length > 0 && !this.props.post) {
+            this.props.history.push('/404');
+        }
+    }
+    
     onDelete = id => {
         const _that = this;
         this.props.postDelete(id)
@@ -179,16 +184,12 @@ class PostDetails extends React.Component {
     render() {
         const {
             post,
-            posts,
             comments,
             selectedId,
             commentFormState,
             errors,
             saving
         } = this.props;
-        if(posts.length > 0 && !post) {
-            this.props.history.push('/404');
-        }
         return (
             <Grid>
                 {post && <Post

@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Moment from 'react-moment';
 import {
     Row,
     Col,
@@ -17,7 +16,13 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Card, {CardActions, CardContent} from 'material-ui/Card';
 
-export default function Post({
+function formatTime(dateString) {
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+}
+
+export default function PostItem({
     post,
     upVote,
     downVote,
@@ -25,27 +30,27 @@ export default function Post({
     comments
 }) {
     return (
-        <Card className="Card" elevation={4} key={post.id}>
+        <Card className="Card" elevation={4}>
             <CardContent>
-                <Typography type="headline" component="h5">
+                <Typography type="display1">
                     {post.title}
                 </Typography>
-                <Typography className="Author" component="p">
+                <p className="Author">
                     Author: {post.author}
-                </Typography>
-                <Typography component="p">
-                    <Moment format="YYYY-MMM-DD">{post.timestamp}</Moment>
-                </Typography>
-                <Typography component="p">
+                </p>
+                <p>
+                    {formatTime(post.timestamp)}
+                </p>
+                <p>
                     No. Comments: {post.comments}
-                </Typography>
+                </p>
                 <Row>
                     <Col xs={12}>
                         <Form>
                             <FormGroup>
-                                <Typography type="body1" component="p">
+                                <p>
                                     Vote Score: {post.voteScore}
-                                </Typography>
+                                </p>
                                 <IconButton onClick={() => upVote(post)} aria-label="Add" color="primary">
                                     <AddCircleIcon/>
                                 </IconButton>

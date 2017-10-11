@@ -9,7 +9,7 @@ export default function CategoryList({list}) {
             <List>
                 {list.map(item => (
                     <ListItem key={item.name} className="CategoryListItem" button>
-                        <Link to={`/category/${item.name}`}>{item.name}</Link>
+                        <Link to={`/category/${item.name}`}><h4>{item.name}</h4></Link>
                     </ListItem>
                 ))}
             </List>

@@ -1,5 +1,4 @@
 import React from 'react'
-import Moment from 'react-moment';
 import { Panel, ListGroup, ListGroupItem, ButtonToolbar, Button } from 'react-bootstrap';
 import CommentItem from './CommentItem';
 

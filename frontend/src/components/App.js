@@ -24,7 +24,6 @@ class App extends React.Component {
                 applyMiddleware(ReduxThunk)
             )
         );
-        // const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
         return (
             <Provider store={store}>
                 <div className="App">

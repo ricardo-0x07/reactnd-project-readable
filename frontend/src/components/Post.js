@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Moment from 'react-moment';
 import { Row, Col, Panel, ButtonToolbar, FormControl, FormGroup, Form } from 'react-bootstrap';
 import Button from 'material-ui/Button';
 import IconButton from 'material-ui/IconButton';
@@ -9,6 +8,12 @@ import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Card, {CardActions, CardContent} from 'material-ui/Card';
+
+function formatTime(dateString) {
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+}
 
 export default function Post({
     post,
@@ -19,28 +24,28 @@ export default function Post({
     return (
         <Card className="Card" elevation={4} key={post.id}>
             <CardContent>
-                <Typography type="headline" component="h5">
+                <Typography type="display2">
                     {post.title}
                 </Typography>
-                <Typography component="pre">
+                <pre>
                     {post ? post.body : ''}
-                </Typography>
-                <Typography className="Author" component="p">
+                </pre>
+                <p className="Author">
                     Author: {post.author}
-                </Typography>
-                <Typography component="p">
-                    <Moment format="YYYY-MMM-DD">{post.timestamp}</Moment>
-                </Typography>
-                <Typography component="p">
+                </p>
+                <p>
+                    {formatTime(post.timestamp)}
+                </p>
+                <p>
                     No. Comments: {post.comments}
-                </Typography>
+                </p>
                 <Row>
                     <Col xs={12}>
                         <Form>
                             <FormGroup>
-                                <Typography type="body1" component="p">
+                                <p>
                                     Vote Score: {post.voteScore}
-                                </Typography>
+                                </p>
                                 <IconButton onClick={() => upVote(post)} aria-label="Add" color="primary">
                                     <AddCircleIcon/>
                                 </IconButton>

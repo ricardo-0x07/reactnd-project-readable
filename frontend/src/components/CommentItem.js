@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Moment from 'react-moment';
 import {
     Row,
     Col,
@@ -16,6 +15,12 @@ import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Card, {CardActions, CardContent} from 'material-ui/Card';
+
+function formatTime(dateString) {
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let date = new Date(dateString);
+    return date.toLocaleDateString('en-US', options);
+}
 
 export default function CommentItem({
     comment,
@@ -33,9 +38,9 @@ export default function CommentItem({
     return (
         <Card className="Card" elevation={4} key={comment.id}>
             <CardContent>
-                {selectedId !== comment.id && <Typography component="pre" onClick={() => onCommentSelected(comment)}>
+                {selectedId !== comment.id && <pre onClick={() => onCommentSelected(comment)}>
                     {comment.body}
-                </Typography>}
+                </pre>}
                 {selectedId === comment.id && <FormGroup>
                     <Typography >
                         <textarea
@@ -49,22 +54,23 @@ export default function CommentItem({
                     <Button className="Button" onClick={() => {
                         updateComment(commentFormState);
                         onCommentUnSelected();
-                    }} raised color="primary" >Update</Button>
+                    }} raised>Update</Button>
+                    <Button className="Button" onClick={() => onCommentUnSelected()} raised color="primary" >Cancel</Button>
                 </FormGroup>
                 }
-                <Typography className="Author" component="p">
+                <p className="Author"p>
                     Author: {comment.author}
-                </Typography>
-                <Typography component="p">
-                    <Moment format="YYYY-MMM-DD">{comment.timestamp}</Moment>
-                </Typography>
+                </p>
+                <p>
+                    {formatTime(comment.timestamp)}
+                </p>
                 <Row>
                     <Col xs={12}>
                         <Form>
                             <FormGroup>
-                                <Typography type="body1" component="p">
+                                <p>
                                     Vote Score: {comment.voteScore}
-                                </Typography>
+                                </p>
                                 <IconButton onClick={() => upVote(comment)} aria-label="Add" color="primary">
                                     <AddCircleIcon/>
                                 </IconButton>

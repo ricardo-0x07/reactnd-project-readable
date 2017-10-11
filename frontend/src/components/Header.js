@@ -12,15 +12,15 @@ export default function Header() {
                     </NavLink>
                 </Navbar.Brand>
             </Navbar.Header>
-            <Nav className="nav navbar-nav">
-                <MenuItem><NavLink exact to="/">Home</NavLink></MenuItem>
-                <MenuItem><NavLink to="/create">New Post</NavLink></MenuItem>
+            <div className="nav navbar-nav">
+                <li><NavLink exact to="/">Home</NavLink></li>
+                <li><NavLink to="/create">New Post</NavLink></li>
                 <NavDropdown title="Categories" id="Categories">
-                    <MenuItem><NavLink to="/category/react">React</NavLink></MenuItem>
-                    <MenuItem><NavLink to="/category/redux">Redux</NavLink></MenuItem>
-                    <MenuItem><NavLink to="/category/udacity">Udacity</NavLink></MenuItem>
+                    <li><NavLink to="/category/react">React</NavLink></li>
+                    <li><NavLink to="/category/redux">Redux</NavLink></li>
+                    <li><NavLink to="/category/udacity">Udacity</NavLink></li>
                 </NavDropdown>
-            </Nav>
+            </div>
         </Navbar>
 );
 }

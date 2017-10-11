@@ -19,14 +19,15 @@ export default function PostList({
             </ButtonGroup>
             <List>
                 {list.length > 0 && list.map(item => (
-                    <PostItem
-                        key={item.id}
-                        post={item}
-                        upVote={upVote}
-                        downVote={downVote}
-                        onDelete={onDelete}
-                        comments={3}
-                    />
+                    <li key={item.id}>
+                        <PostItem
+                            post={item}
+                            upVote={upVote}
+                            downVote={downVote}
+                            onDelete={onDelete}
+                            comments={3}
+                        />
+                    </li>
                 ))}
             </List>
         </Panel>
