@@ -1,5 +1,9 @@
+const config = require('./config')
+let api = "http://localhost:3001/api"
 
-const api = "http://localhost:3001/api"
+if(config.mode === 'production') {
+    api = "/api"    
+}
 
 
 // Generate a unique token for storing your bookshelf data on the backend server.
