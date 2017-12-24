@@ -1,0 +1,34 @@
+{
+  "name": "reactnd-project-readable",
+  "version": "1.0.0",
+  "description": "Readables is a content and comment web app built primarily with React, Redux and React-Router.",
+  "main": "index.js",
+  "scripts": {
+    "build": "\"cd frontend && npm build\"",
+    "install": "(cd frontend && npm install) && (cd api-server && npm install)",
+    "start": "concurrently \"cd frontend && PORT=3000 npm start\" \"cd api-server && PORT=3001 npm start\"",
+    "start:prod": "cd api-server && npm start:prod",
+    "heroku-postbuild": "npm build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricardo-0x07/reactnd-project-readable.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "node"
+  ],
+  "author": "clive cadogan",
+  "license": "ISC",
+  "engines": {
+    "node": "6.11.4"
+  },
+  "bugs": {
+    "url": "https://github.com/ricardo-0x07/reactnd-project-readable/issues"
+  },
+  "homepage": "https://github.com/ricardo-0x07/reactnd-project-readable#readme",
+  "dependencies": {
+    "concurrently": "^3.5.1"
+  }
+}
