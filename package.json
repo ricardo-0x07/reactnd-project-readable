@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "\"cd frontend && npm run build\"",
-    "install": "(cd frontend && npm install) && (cd api-server && npm install)",
     "start": "concurrently \"cd frontend && PORT=3000 npm start\" \"cd api-server && PORT=3001 npm start\"",
     "start:prod": "cd api-server && npm start:prod",
-    "heroku-postbuild": "\"cd frontend && npm run build\""
+    "heroku-postbuild": "(cd api-server && npm install) && (cd frontend/ && npm install npm run build)"
   },
   "repository": {
     "type": "git",
