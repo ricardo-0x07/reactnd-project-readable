@@ -4,7 +4,7 @@
   "description": "Readables is a content and comment web app built primarily with React, Redux and React-Router.",
   "main": "index.js",
   "scripts": {
-    "build": "\"cd frontend && npm build\"",
+    "build": "\"cd frontend && npm run build\"",
     "install": "(cd frontend && npm install) && (cd api-server && npm install)",
     "start": "concurrently \"cd frontend && PORT=3000 npm start\" \"cd api-server && PORT=3001 npm start\"",
     "start:prod": "cd api-server && npm start:prod",
